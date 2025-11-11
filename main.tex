@@ -1,26 +1,78 @@
 \documentclass{article}
-\usepackage{graphicx}
-\usepackage{float}
-
-% Margins can be modified here if need be:
-\usepackage[a4paper, portrait, left=1cm, right=1cm, top=3cm, bottom=3cm]{geometry}
-
-% Calendar year (for title label) is part of python output:
-\newcommand{\CalendarYear}{\input{year-label}}
-
+\usepackage[table]{xcolor}
 \usepackage{array}
-% Defining the column format to nicely fill page width:
-\newcolumntype{C}{>{\centering\arraybackslash}p{0.12\textwidth}}
-% 0.12 is a number I find makes the seven columns fit cleanly in the textwidth with even if margins need to change.
+\usepackage[a4paper,landscape,top=2cm,bottom=0.5cm,left=0.5cm,right=0.5cm]{geometry}
+\usepackage{tikz}
+\usepackage{xparse}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{float}
+\usepackage{emoji}
 
-% Document info:
-\title{Printable calendar that can be updated by year}
-\author{Rachel Ostic}
-\date{January 2021}
+
+\pagestyle{empty}
+\newcolumntype{C}{>{\centering\arraybackslash}p{2.3cm}}
+
+\newlength{\cellHeightFiveRows}
+\setlength{\cellHeightFiveRows}{1.9cm}
+\newlength{\cellHeightSixRows}
+\setlength{\cellHeightSixRows}{1.3cm}
+
+\newcommand{\CalendarYear}{\input{output/year-label}}
+
+\title{Calendar for the Year \CalendarYear}
+\author{Dominik Abel}
+\date{\today}
+
+\NewDocumentCommand{\dayCell}{m m o}{%
+  \begin{minipage}[t][#2][s]{\linewidth}
+    \begin{minipage}[t]{\linewidth}
+    \vspace*{-6pt}
+      \centering
+      \begin{Large}
+      \textbf{#1}\\[-0.2ex]
+      \end{Large}
+      \IfValueT{#3}{\small{#3}}
+    \end{minipage}
+    
+    \vfill
+    
+    \begin{minipage}[t]{\linewidth}
+      \centering
+      \noindent\tikz{\fill[red!40,draw=none] (0,0) rectangle (\linewidth,4ex);}\\[0.3ex]
+      \noindent\tikz{\fill[yellow!40,draw=none] (0,0) rectangle (\linewidth,4ex);}\\[0.3ex]
+      \noindent\tikz{\fill[green!40,draw=none] (0,0) rectangle (\linewidth,4ex);}\\ \vspace*{1pt}
+    \end{minipage}
+  \end{minipage}%
+}
+
+\NewDocumentCommand{\offDay}{m m o}{%
+  \begin{minipage}[t][#2][s]{\linewidth}
+    \begin{minipage}[t]{\linewidth}
+      \vspace*{-6pt}
+      \centering
+      \begin{Large}
+        \textcolor{gray!70}{\textbf{#1}}\\[-0.2ex]
+      \end{Large}
+      \IfValueT{#3}{\textcolor{gray!60}{\small{#3}}}
+    \end{minipage}
+
+    \vfill
+
+    \begin{minipage}[t]{\linewidth}
+      \centering
+      \noindent\tikz{\fill[gray!40,draw=none] (0,0) rectangle (\linewidth,4ex);}\\[0.3ex]
+      \noindent\tikz{\fill[gray!30,draw=none] (0,0) rectangle (\linewidth,4ex);}\\[0.3ex]
+      \noindent\tikz{\fill[gray!20,draw=none] (0,0) rectangle (\linewidth,4ex);}\\ \vspace*{1pt}
+    \end{minipage}
+  \end{minipage}%
+}
+
 
 \begin{document}
+%\showthe\textheight
+%\showthe\textwidth
 
-% I prefer not to show the page numbers:
 \pagenumbering{gobble}
  
 % Title page:
@@ -30,45 +82,16 @@
  
  \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\linewidth]{images/cover.jpg}
+    \includegraphics[height=0.9\textheight, keepaspectratio]{images/cover.jpg}
 \end{figure}
+\begin{center}
 \input{image-captions/cover-caption}
+\end{center}
 
-% Loop over the months:
+% add months
 \makeatletter
-
-\@for\month:={January,February,March,April,May,June,July,August,September,October,November,December}\do{
-\newpage
-
-% month image
- \begin{figure}[H]
-    \centering
-    \includegraphics[width=\linewidth]{images/\month.jpg}
-\end{figure}
-\newpage
-
-% month label (not numbered by default, remove * for numbers)
-\section*{\month}
-
-% month table
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|*{7}{C|}}
-    \hline
-    \input{tables/\month.tex} % tex month table generated with python
-    \end{tabular}
-    \end{table}
-    
-% monthly caption for image (room for a couple lines - if more space is needed the margins can be decreased, or the calendar cell height can shrink in python table generator)
-\input{image-captions/\month-caption}
-\newpage
+\@for\month:={01,02,03,04,05,06,07,08,09,10,11,12}\do{
+    \input{./output/months/\month.tex}
 } 
-
 \makeatother
-
-
-
-% https://riptutorial.com/latex/example/28657/loops---repeating-things
-% used to figure out how to make the loop!!
-
 \end{document}

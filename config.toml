@@ -1,0 +1,79 @@
+year = 2026
+
+firstweekday = 0            # 6 to start week on Sun, 0 to start on Mon
+day_height = "15ex"         # Set height of calendar cell in LaTeX table
+front_title = "pipapo"
+front_image_path = "./images/cover.jpg"
+
+[month.Januar]
+number = 1
+image_path = "./images/January.jpg"
+image_location = "Loc1"
+
+[month.Februar]
+number = 2
+image_path = "./images/February.jpg"
+image_caption = "our Time"
+
+[month."März"]
+number = 3
+image_path = "./images/March.jpg"
+image_location = "Loc3"
+
+[month.April]
+number = 4
+image_path = "./images/April.jpg"
+image_caption = "our Time"
+
+[month.Mai]
+number = 5
+image_path = "./images/May.jpg"
+image_location = "Loc1"
+
+[month.Juni]
+number = 6
+image_path = "./images/June.jpg"
+image_caption = "our Time"
+
+[month.Juli]
+number = 7
+image_path = "./images/July.jpg"
+image_location = "Loc1"
+
+[month.August]
+number = 8
+image_path = "./images/August.jpg"
+image_location = "Loc1"
+
+[month.September]
+number = 9
+image_path = "./images/September.jpg"
+image_caption = "our Time"
+image_location = "Loc2"
+
+[month.Oktober]
+number = 10
+image_path = "./images/October.jpg"
+image_location = "Loc1"
+
+[month.November]
+number = 11
+image_path = "./images/November.jpg"
+image_location = "Loc1"
+
+[month.Dezember]
+number = 12
+image_path = "./images/December.jpg"
+image_location = "Loc1"
+
+[custom_holiday."B-Day 2nd Person"]
+month = 2
+day = 1
+
+[custom_holiday.Anniversary]
+month = 10
+day = 1
+
+[custom_holiday."B-Day 1st Person"]
+month = 7
+day = 1

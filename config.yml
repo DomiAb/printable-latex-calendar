@@ -1,32 +1,10 @@
-year: 2021
+year: 2026
+titel: "My Custom Calendar"
 
 # 6 to start week on Sun, 0 to start on Mon
-firstweekday: 6
+firstweekday: 0
 
-custom_holidays:
-        - month: July
-          day: 27
-          name: Paul Birthday
-        - month: January
-          day: 1
-          name: New Year
-        - month: May
-          day: 19
-          name: Rachel Birthday
-        - month: July
-          day: 1
-          name: Canada Day
-        - month: September
-          day: 19
-          name: Oliver Birthday
-        - month: May
-          day: 19
-          name: Victoria Day
 
-# Country and province/state if applicable
-country: CA
-province: 
-state: 
 
-# Set height of calendar cell in LaTeX table
-day_height: 20ex
+
+
