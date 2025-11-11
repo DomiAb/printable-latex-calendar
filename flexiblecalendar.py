@@ -20,6 +20,9 @@ def main():
     config.months.sort(key=lambda x: x.number)
 
     print_year_label(config)
+    print_title(config)
+    print_subtitle(config)
+    print_author(config)
     tqdm_max = min(len(selected_year), len(config.months))
 
     holiday_list = get_holiday_list(config)
@@ -40,8 +43,31 @@ def print_content_to_file(filename: str, content: str):
 
 def print_year_label(config: Config):
     print_content_to_file(
-        "./output/year-label.tex",
+        "./output/config/year-label.tex",
         str(config.year)
+    )
+
+
+def print_title(config: Config):
+    print_content_to_file(
+        "./output/config/title.tex",
+        str(config.front_title)
+    )
+
+
+def print_subtitle(config: Config):
+    subtitle_content = str(config.subtitle) if config.subtitle else ""
+    print_content_to_file(
+        "./output/config/subtitle.tex",
+        subtitle_content
+    )
+
+
+def print_author(config: Config):
+    author_content = str(config.author) if config.author else ""
+    print_content_to_file(
+        "./output/config/author.tex",
+        author_content
     )
 
 
@@ -106,66 +132,33 @@ def print_month_embedding_code(config_month):
 
 
 def print_month_dates_code(month, config_month: Month, config: Config, holiday_list: list[Holiday]):
-    content = r"""
-\begin{tabular}{|*{7}{C|}}
-\hline
-\textbf{Mo} & \textbf{Di} & \textbf{Mi} & \textbf{Do} & \textbf{Fr} & \textbf{Sa} & \textbf{So} \\ \hline
-\dayCell{1}[New Year’s Day] & \dayCell{2} & \dayCell{3}[Meeting] & \dayCell{4} & \dayCell{5} & \dayCell{6} & \dayCell{7} \\ \hline
-\dayCell{8} & \dayCell{9} & \dayCell{10}[Workshop] & \dayCell{11} & \dayCell{12} & \dayCell{13} & \dayCell{14} \\ \hline
-\dayCell{15} & \dayCell{16} & \dayCell{17} & \dayCell{18} & \dayCell{19}[Holiday] & \dayCell{20} & \dayCell{21} \\ \hline
-\dayCell{22} & \dayCell{23} & \dayCell{24} & \dayCell{25} & \dayCell{26} & \dayCell{27} & \dayCell{28} \\ \hline
-\dayCell{22} & \dayCell{23} & \dayCell{24} & \dayCell{25} & \dayCell{26} & \dayCell{27} & \dayCell{28} \\ \hline
-\dayCell{29} & \dayCell{30} & \dayCell{31} & & & & \\ \hline
-\end{tabular}
-"""
-
-    print_content_to_file(f"./output/tables/{config_month.number:02}_old.tex", content)
-
     content = table_month(month, config_month.number, config, holiday_list)
-    
     print_content_to_file(f"./output/tables/{config_month.number:02}.tex", content)
 
 
-
-"""
-    result = ""
-    result += r"\begin{tabular}{|*{7}{C|}}" + "\n"
-    result += "\\hline\n"
-
-    result += "\\begin{minipage}[t]{0.55\\textwidth}"
-    result += "\n"
-    result += "\t\\small\n"
-    result += "\t\\centering\n"
-    result += "\t\\begin{tabular}{|*{7}{C|}}\n"
-    result += "\t\\hline\n"
-    result += "\t\\end{tabular}\n"
-    result += "\\end{minipage}%\n"
-"""
-
-"""
-    result += get_month_header_latex_block(config_month)
-    result += "\n"
-    result += "\\noindent\n"
-    if config_month.number % 2 == 0:
-        result += get_calendar_latex_block(config_month)
-        result += "\\hfill\n"
-        result += get_image_latex_block(config_month)
-    else:
-        result += get_image_latex_block(config_month)
-        result += "\\hfill\n"
-        result += get_calendar_latex_block(config_month)
-"""
-
-
-def table_week(week, month_number, cell_height_macro, holiday_list: list[Holiday]) -> str:
+def table_week(week, month_number, cell_height_macro, holiday_list: list[Holiday], prev_month_days: int) -> str:
     row_string = ""
+    next_month_start = 0
     for index, day in enumerate(week):
         row_string += "\t"
         if day:
-            event_string = [holiday.name for holiday in holiday_list if holiday.month == month_number and holiday.day == day]
-            row_string += "\\dayCell{" + str(day) + "}" + f"{{{cell_height_macro}}}"
+            event_string = [h.name for h in holiday_list if h.month == month_number and h.day == day]
+            row_string += f"\\dayCell{{{day}}}{{{cell_height_macro}}}"
             if event_string:
                 row_string += "[" + "\\newline ".join(event_string) + "]"
+        elif week[0] == 0:
+            off_day = prev_month_days - week.count(0) + index + 1
+            event_string = [h.name for h in holiday_list if h.month == month_number - 1 and h.day == off_day]
+            row_string += f"\\offDay{{{off_day}}}{{{cell_height_macro}}}"
+            if event_string:
+                row_string += "[" + "\\newline ".join(event_string) + "]"
+        else:
+            next_month_start += 1
+            event_string = [h.name for h in holiday_list if h.month == month_number + 1 and h.day == next_month_start]
+            row_string += f"\\offDay{{{next_month_start}}}{{{cell_height_macro}}}"
+            if event_string:
+                row_string += "[" + "\\newline ".join(event_string) + "]"
+
         row_string += "\t"
         if index < 6:
             row_string += "&"
@@ -174,11 +167,12 @@ def table_week(week, month_number, cell_height_macro, holiday_list: list[Holiday
     return row_string
 
 
-# combine rows into full month LaTeX table
 def table_month(month, month_number, config: Config, holiday_list: list[Holiday]) -> str:
     num_weeks = len(month[0])
     cell_height_macro = "\\cellHeightSixRows" if num_weeks == 6 else "\\cellHeightFiveRows"
 
+    prev_month = month_number - 1 if month_number > 1 else 12
+    prev_month_days = calendar.monthrange(config.year, prev_month)[1]
 
     month_string = r"\begin{tabular}{|*{7}{C|}}" + "\n"
     month_string += r"\hline" + "\n"
@@ -189,7 +183,7 @@ def table_month(month, month_number, config: Config, holiday_list: list[Holiday]
         else:
             month_string += "\\\\ \\hline \n"
     for week in month[0]:
-        month_string += table_week(week, month_number, cell_height_macro, holiday_list)
+        month_string += table_week(week, month_number, cell_height_macro, holiday_list, prev_month_days)
     month_string += r"\end{tabular}"
     return month_string
 

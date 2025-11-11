@@ -18,6 +18,6 @@ pdf:
 
 clean:
 	$(RM) ./output/tables/*
-	$(RM) ./output/year-label.tex
 	$(RM) ./output/months/*
+	$(RM) ./output/config/*
 	$(RM) ./output/main.*

@@ -18,10 +18,10 @@
 \newlength{\cellHeightSixRows}
 \setlength{\cellHeightSixRows}{1.3cm}
 
-\newcommand{\CalendarYear}{\input{output/year-label}}
+\newcommand{\CalendarYear}{\input{output/config/year-label}}
 
 \title{Calendar for the Year \CalendarYear}
-\author{Dominik Abel}
+\author{\input{output/config/author}}
 \date{\today}
 
 \NewDocumentCommand{\dayCell}{m m o}{%
@@ -77,7 +77,7 @@
  
 % Title page:
 \begin{center}
- \section*{\CalendarYear \input{title}} 
+ \section*{\CalendarYear \input{./output/config/title}} 
 \end{center}
  
  \begin{figure}[H]
@@ -85,7 +85,7 @@
     \includegraphics[height=0.9\textheight, keepaspectratio]{images/cover.jpg}
 \end{figure}
 \begin{center}
-\input{image-captions/cover-caption}
+\input{./output/config/subtitle}
 \end{center}
 
 % add months

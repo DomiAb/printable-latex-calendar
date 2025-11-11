@@ -56,9 +56,10 @@ class Holiday:
 class Config:
     year: int
     firstweekday: int
-    day_height: str
     front_title: str
+    subtitle: str | None = None
     front_image_path: str
+    author: str | None = None
     months: list[Month]
     custom_holidays: list[Holiday]
 
@@ -70,9 +71,10 @@ def load_config(file_path: str) -> Config:
     config = Config()
     config.year = data.get("year", 2026)
     config.firstweekday = data.get("firstweekday", 0)
-    config.day_height = data.get("day_height", "20ex")
     config.front_title = data.get("front_title", "pipapo")
+    config.subtitle = data.get("subtitle", None)
     config.front_image_path = data.get("front_image_path", ".images/photo00.png")
+    config.author = data.get("author", None)
     
     months_data = data.get("month", [])
     month_list = []
