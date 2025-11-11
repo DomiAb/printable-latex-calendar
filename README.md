@@ -40,9 +40,7 @@ The input configuration has a few options to generate the calendar. These are:
 - **year**: The calendar year to print, runs from January to December.
 - **firstweekday**: The day of the week to place as the leftmost column in the calendar. A value of 0 starts weeks on Monday and can be incremented up to 6 for Sunday.
 - **custom\_holidays**: A list of dictionaries for personal holidays to print in the calendar. This could include birthdays, anniversaries or other events planned well in advance. Each entry takes *month*, *day* and *name* keys. The *name* value will be printed in the calendar on the appropriate day. Note that the month can be entered as the full string (case insensitive) or as the integer month (so "January", "january", 1 should all work the same).
-- **country**: Country code for national holiday selection from the [holidays library](https://pypi.org/project/holidays/).
-- **state** or **province**: Region of the country if applicable to get more specific holidays.
-- **day\_height**: Height of the LaTeX weekly rows, can be adjusted if page geometry is altered.
+
 
 ### LaTeX 
 
