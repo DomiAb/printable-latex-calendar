@@ -1,8 +1,10 @@
 year = 2026
 
 firstweekday = 0            # 6 to start week on Sun, 0 to start on Mon
-day_height = "15ex"         # Set height of calendar cell in LaTeX table
+author = "author name"
+
 front_title = "pipapo"
+subtitle = "mein Kalender"
 front_image_path = "./images/cover.jpg"
 
 [month.Januar]
